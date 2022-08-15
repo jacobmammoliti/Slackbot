@@ -1,3 +1,5 @@
+[![Slackbot CI](https://github.com/jacobmammoliti/Slackbot/actions/workflows/main.yml/badge.svg?branch=main)](https://github.com/jacobmammoliti/Slackbot/actions/workflows/main.yml)
+[![Docker Pulls](https://img.shields.io/docker/pulls/jacobmammoliti/slackbot)](https://hub.docker.com/repository/docker/jacobmammoliti/slackbot)
 # Slackbot
 A Python based Slackbot to announce events to a given a workspace.
 
