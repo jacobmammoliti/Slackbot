@@ -35,10 +35,10 @@ else:
     from flask import Flask, request
     from slack_bolt.adapter.flask import SlackRequestHandler
 
-    # Initalize app with Bot Token and Signing Secret
+    # Initialize app with Bot Token and Signing Secret
     app = App(token=SLACK_BOT_TOKEN, signing_secret=SLACK_SIGNING_SECRET)
 
-    # Intialize Flask app
+    # Initialize Flask app
     flask_app = Flask(__name__)
     handler = SlackRequestHandler(app)
 
@@ -47,6 +47,11 @@ else:
     def slack_events():
         '''Sets up a Request URL path for Slack interactivity.'''
         return handler.handle(request)
+    
+    @flask_app.route("/healthz", methods=["GET"])
+    def healthz():
+        '''Sets up a health check endpoint.'''
+        return "Healthy", 200
 
 # When a channel is created, send a message to the specified channel
 # Required scope: 'channels:read'
