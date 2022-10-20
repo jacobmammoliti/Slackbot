@@ -46,6 +46,6 @@ if __name__ == "__main__":
 else:
     logging.info("Running in HTTP endpoint mode.")
     # Running with gunicorn
-    gunicorn_logger = logging.getLogger('gunicorn.error')
+    gunicorn_logger = logging.getLogger("gunicorn.error")
     app.logger.handlers = gunicorn_logger.handlers
     app.logger.setLevel(gunicorn_logger.level)

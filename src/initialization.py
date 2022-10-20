@@ -9,6 +9,7 @@ fail early and provide a useful message on what is missing.
 import os
 import sys
 import logging
+
 from vault.client import initialize_client, retrieve_slack_secrets
 
 def http_listener():
