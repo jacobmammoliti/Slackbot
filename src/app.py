@@ -1,9 +1,9 @@
 """This is the main entrypoint to the Slack bot.
 
 This bot runs in two types of modes, Socket Mode for testing purposes,
-and HTTP mode for real-world deployments. Refer to the README in the
-repository for more information on how to run it and to see
-the available configuration settings.
+and HTTP endpoint mode for real-world deployments. Refer to the
+README in the repository for more information on how to run it
+and to see the available configuration settings.
 """
 import os
 import logging
@@ -32,18 +32,20 @@ else:
     # Initialize Flask routes here
     flask_app = initialize_flask(app, request_handler_path)
 
+# Register plugins to the Slack bot
+register_plugins(app)
+
 if __name__ == "__main__":
-    # Configure gunicorn logger
-    gunicorn_logger = logging.getLogger('gunicorn.error')
-    app.logger.handlers = gunicorn_logger.handlers
-    app.logger.setLevel(gunicorn_logger.level)
-
-    # Call function to register plugins to the Slack bot
-    register_plugins(app)
-
+    # Running directly
     if os.environ.get("SOCKET_MODE", False):
         logging.info("Running in Socket Mode.")
         SocketModeHandler(app, credentials['slack_app_token']).start()
     else:
         logging.info("Running in HTTP mode.")
         flask_app.run(host=listen_addr, port=int(listen_port))
+else:
+    logging.info("Running in HTTP endpoint mode.")
+    # Running with gunicorn
+    gunicorn_logger = logging.getLogger('gunicorn.error')
+    app.logger.handlers = gunicorn_logger.handlers
+    app.logger.setLevel(gunicorn_logger.level)

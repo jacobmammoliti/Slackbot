@@ -1,3 +1,5 @@
+import logging
+
 from slack_bolt import App
 
 from plugins.channel_created.channel_created import channel_created
@@ -12,5 +14,12 @@ def register_plugins (app: App):
     Returns:
         None.
     """
-    app.event("channel_created")(channel_created)
-    app.event("team_join")(team_join)
+
+    plugin_list = [
+        "channel_created", 
+        "team_join"
+    ]
+
+    for plugin in plugin_list:
+        app.event(plugin)(eval(plugin))
+        logging.info("Successfully registered plugin: %s", plugin)
