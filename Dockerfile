@@ -12,7 +12,7 @@ WORKDIR $APP_HOME
 COPY src/* requirements.txt docker-entrypoint.sh ./
 
 # Install dependencies 
-RUN pip install -U pip && pip install -r requirements.txt && chown -R worker: $APP_HOME
+RUN pip install -U pip && pip install -r requirements.txt && chown -R worker: $APP_HOME && chmod +x docker-entrypoint.sh
 
 # Switch to non-root user
 USER worker

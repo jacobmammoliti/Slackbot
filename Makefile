@@ -1,5 +1,5 @@
 REPOSITORY_NAME=jacobmammoliti/slackbot
-VERSION=1.0
+VERSION=0.2
 IMAGE_TAG=$(REPOSITORY_NAME):$(VERSION)
 
 docker: docker-build docker-publish
