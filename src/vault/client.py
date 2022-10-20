@@ -68,7 +68,7 @@ def retrieve_slack_secrets(client):
 
     try:
         credentials['slack_channel_id'] = result['data']['data']['slack_channel_id']
-        credentials['slack_bot_token'] = result['data']['data']['slack_channel_id']
+        credentials['slack_bot_token'] = result['data']['data']['slack_bot_token']
 
         if os.environ.get("SOCKET_MODE", False):
             credentials['slack_app_token'] = result['data']['data']['slack_app_token']
