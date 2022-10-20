@@ -20,6 +20,8 @@ def initialize_client():
     Returns:
         client (class): The Client class for HashiCorp Vault.
     """
+    logging.info("Connecting to HashiCorp Vault at %s", os.environ["VAULT_ADDR"])
+
     client = Client(url=os.environ["VAULT_ADDR"])
 
     # Call on the appropriate authentication method
@@ -33,6 +35,8 @@ def initialize_client():
     except AssertionError as error:
         logging.error("Unable to authenticate to HashiCorp Vault. Got: %s", error)
         sys.exit(1)
+
+    logging.info("Successfully authenticated to HashiCorp Vault.")
 
     return client
 
@@ -88,9 +92,9 @@ def kubernetes_auth_method(client):
     token_file = open("/var/run/secrets/kubernetes.io/serviceaccount/token", encoding="utf8").read()
     
     Kubernetes(client.adapter).login(
-        role=os.environ.get("VAULT_KUBERNETES_ROLE", "default",
+        role=os.environ.get("VAULT_KUBERNETES_ROLE", "default"),
         mount_point = os.environ.get("VAULT_AUTH_MOUNT", "kubernetes"),
-        jwt=token_file)
+        jwt=token_file
     )
 
     token_file.close()
