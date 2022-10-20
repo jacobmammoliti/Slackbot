@@ -9,7 +9,7 @@ import sys
 import logging
 from hvac import Client
 from hvac.api.auth_methods import Kubernetes
-from hvac.exceptions import InvalidPath
+from hvac.exceptions import InvalidPath, Forbidden
 
 def initialize_client():
     """Initializes a client connection to HashiCorp Vault.
@@ -90,11 +90,17 @@ def kubernetes_auth_method(client):
         None.
     """
     token_file = open("/var/run/secrets/kubernetes.io/serviceaccount/token", encoding="utf8").read()
+
+    logging.info("Authenticating to HashiCorp Vault with Kubernetes role: %s", os.environ.get("VAULT_KUBERNETES_ROLE", "default"))
     
-    Kubernetes(client.adapter).login(
-        role=os.environ.get("VAULT_KUBERNETES_ROLE", "default"),
-        mount_point = os.environ.get("VAULT_AUTH_MOUNT", "kubernetes"),
-        jwt=token_file
-    )
+    try:        
+        Kubernetes(client.adapter).login(
+            role=os.environ.get("VAULT_KUBERNETES_ROLE", "default"),
+            mount_point = os.environ.get("VAULT_AUTH_MOUNT", "kubernetes"),
+            jwt=token_file
+        )
+    except Forbidden as error:
+        logging.error(error)
+        sys.exit(1)
 
     token_file.close()
