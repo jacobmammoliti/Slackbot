@@ -89,6 +89,4 @@ def _get_credentials_from_hashicorp_vault():
     # Retrieve Slack credentials from KVv2 store
     credentials = retrieve_slack_secrets(client)
 
-    logging.info(credentials)
-
     return credentials
