@@ -56,9 +56,11 @@ def retrieve_slack_secrets(client):
     # assume we start at 'secret/'
     mount_point = os.environ.get("VAULT_KV2_MOUNT_POINT", "secret")
 
+    logging.info("Retrieving secret at: %s/data/%s", os.environ.get("VAULT_KV2_MOUNT_POINT", "secret"), os.environ["VAULT_SECRET_PATH"])
+
     try:
         result = client.secrets.kv.v2.read_secret_version(
-            mount_point=os.environ["VAULT_KV2_MOUNT_POINT"],
+            mount_point=os.environ.get("VAULT_KV2_MOUNT_POINT", "secret"),
             path=os.environ["VAULT_SECRET_PATH"]
         )
     except InvalidPath as error:
@@ -76,7 +78,12 @@ def retrieve_slack_secrets(client):
         logging.error("%s key not found at %s", error,
             mount_point + "/" + os.environ["VAULT_SECRET_PATH"])
         sys.exit(1)
+    except Forbidden as error:
+        logging.error("%s")
+        sys.exit(1)
 
+    logging.info("Successfully retrieved secret at: %s/data/%s", os.environ.get("VAULT_KV2_MOUNT_POINT", "secret"), os.environ["VAULT_SECRET_PATH"])
+    
     return credentials
 
 def kubernetes_auth_method(client):
