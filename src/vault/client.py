@@ -102,5 +102,3 @@ def kubernetes_auth_method(client):
     except Forbidden as error:
         logging.error(error)
         sys.exit(1)
-
-    token_file.close()
